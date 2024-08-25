@@ -1,0 +1,75 @@
+# version: '3.8'
+
+# services:
+#   frontend:
+#     build:
+#       context: ./i-helper-frontend
+#       dockerfile: Dockerfile.dev
+#     volumes:
+#       - ./i-helper-frontend:/app
+#       - /app/node_modules
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - CHOKIDAR_USEPOLLING=true
+#     command: npm run dev:react
+
+#   backend:
+#     build:
+#       context: ./i-helper-backend
+#       dockerfile: Dockerfile.dev
+#     volumes:
+#       - ./i-helper-backend:/app
+#       - /app/target
+#     ports:
+#       - "3030:3030"
+#     environment:
+#       - RUST_BACKTRACE=1
+#       - RUST_LOG=debug
+#       - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+#     command: cargo watch -x run
+
+#   electron:
+#     build:
+#       context: ./i-helper-frontend
+#       dockerfile: Dockerfile.electron
+#     volumes:
+#       - ./i-helper-frontend:/app
+#       - /app/node_modules
+#       - /tmp/.X11-unix:/tmp/.X11-unix
+#     environment:
+#       - DISPLAY=${DISPLAY}
+#       - ELECTRON_DISABLE_SECURITY_WARNINGS=true
+#     network_mode: host
+#     depends_on:
+#       - frontend
+#       - backend
+#     command: npm run dev:electron
+
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./i-helper-frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./i-helper-frontend:/app
+      - /app/node_modules
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ELECTRON_DISABLE_SECURITY_WARNINGS=true
+    network_mode: host
+    command: npm run electron:dev
+
+  backend:
+    build:
+      context: ./i-helper-backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./i-helper-backend:/app
+      - /app/target
+    ports:
+      - "3030:3030"
+    command: cargo watch -x run

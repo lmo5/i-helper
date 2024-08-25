@@ -1,0 +1,89 @@
+{
+  "name": "i-helper-frontend",
+  "version": "1.0.0",
+  "description": "i-Helper Frontend",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron:dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && tsc -p tsconfig.electron.json && electron .\"",
+    "electron:build": "npm run build && tsc -p tsconfig.electron.json && electron-builder build --mac --win --linux -c.extraMetadata.main=dist/main/main.js --publish never",
+    "package": "npm run build && tsc -p tsconfig.electron.json && electron-builder build --mac --win --linux -c.extraMetadata.main=dist/main/main.js --publish never"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "axios": "^0.24.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.1",
+    "electron": "^16.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
+    "electron-builder": "^22.14.5",
+    "react-scripts": "5.0.0",
+    "typescript": "^4.5.5",
+    "wait-on": "^6.0.0"
+  },
+  "build": {
+    "appId": "com.yourcompany.i-helper",
+    "productName": "i-Helper",
+    "files": [
+      "build/**/*",
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

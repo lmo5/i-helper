@@ -1,0 +1,23 @@
+FROM rust:latest
+
+WORKDIR /app
+
+# Install cargo-watch
+RUN cargo install cargo-watch
+
+# Configure cargo to use git-fetch-with-cli
+RUN mkdir -p ~/.cargo && \
+    echo '[net]' >> ~/.cargo/config && \
+    echo 'git-fetch-with-cli = true' >> ~/.cargo/config
+
+# Update SSL certificates
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+
+COPY . .
+
+# Build dependencies
+RUN cargo build
+
+EXPOSE 3030
+
+CMD ["cargo", "watch", "-x", "run"]
